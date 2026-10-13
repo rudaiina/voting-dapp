@@ -1,0 +1,370 @@
+:root {
+  --ink: #14171d;
+  --ink-panel: #1b1f27;
+  --paper: #f3efe4;
+  --paper-line: #d9d2bf;
+  --stamp-red: #a4392c;
+  --stamp-red-dim: #7e2c22;
+  --brass: #b8934a;
+  --text-on-ink: #ece7d9;
+  --text-muted: #a9a494;
+  --text-on-paper: #1b1f27;
+  --serif: "Fraunces", Georgia, serif;
+  --sans: "IBM Plex Sans", -apple-system, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--ink);
+  background-image:
+    radial-gradient(circle at 15% 0%, rgba(184, 147, 74, 0.08), transparent 40%),
+    radial-gradient(circle at 85% 100%, rgba(164, 57, 44, 0.08), transparent 40%);
+  color: var(--text-on-ink);
+  font-family: var(--sans);
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 64px 20px;
+}
+
+.ballot-sheet {
+  width: 100%;
+  max-width: 620px;
+  background: var(--paper);
+  color: var(--text-on-paper);
+  border-radius: 3px;
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  position: relative;
+}
+
+.ballot-sheet::before {
+  /* torn-edge perforation, referencing a real ballot stub */
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background-image: radial-gradient(circle, var(--ink) 2.5px, transparent 2.6px);
+  background-size: 16px 16px;
+  background-position: 8px -8px;
+  opacity: 0.25;
+}
+
+.ballot-header {
+  padding: 40px 44px 28px;
+  border-bottom: 1px solid var(--paper-line);
+}
+
+.precinct-line {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: #6b6656;
+  margin: 0 0 18px;
+}
+
+.ballot-header h1 {
+  font-family: var(--serif);
+  font-weight: 600;
+  font-size: 40px;
+  line-height: 1.05;
+  margin: 0 0 12px;
+  font-optical-sizing: auto;
+}
+
+.ballot-sub {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #4a4636;
+  margin: 0;
+  max-width: 46ch;
+}
+
+.voter-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 44px;
+  background: #eae4d4;
+  border-bottom: 1px solid var(--paper-line);
+  flex-wrap: wrap;
+}
+
+.voter-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: #4a4636;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #a39c85;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+
+.status-dot.connected {
+  background: #4a7a4a;
+}
+
+.status-dot.voted {
+  background: var(--stamp-red);
+}
+
+.connect-btn {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 20px;
+  background: var(--ink);
+  color: var(--text-on-ink);
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.connect-btn:hover:not(:disabled) {
+  background: #262b35;
+}
+
+.connect-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.connect-btn:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.ballot-body {
+  padding: 32px 44px 12px;
+}
+
+.ballot-rule {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #8a836c;
+  border-bottom: 2px solid var(--text-on-paper);
+  padding-bottom: 8px;
+  margin-bottom: 4px;
+}
+
+.candidate-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.candidate-row {
+  display: grid;
+  grid-template-columns: 28px 1fr auto;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--paper-line);
+  cursor: pointer;
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+}
+
+.candidate-row:last-child {
+  border-bottom: none;
+}
+
+.candidate-row:disabled {
+  cursor: default;
+}
+
+.ballot-box {
+  width: 22px;
+  height: 22px;
+  border: 1.5px solid var(--text-on-paper);
+  border-radius: 2px;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.ballot-box::after {
+  /* the "punch" mark, hidden until this candidate is voted for */
+  content: "✕";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  color: var(--stamp-red);
+  opacity: 0;
+  transform: scale(0.5) rotate(-8deg);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.candidate-row.voted-for .ballot-box::after {
+  opacity: 1;
+  transform: scale(1) rotate(-8deg);
+}
+
+.candidate-row.voted-for .ballot-box {
+  border-color: var(--stamp-red);
+}
+
+.candidate-name {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 500;
+}
+
+.vote-tally {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 14px;
+  color: #4a4636;
+  min-width: 96px;
+  justify-content: flex-end;
+}
+
+.tally-bar-track {
+  width: 56px;
+  height: 5px;
+  background: var(--paper-line);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.tally-bar-fill {
+  height: 100%;
+  background: var(--brass);
+  transition: width 0.4s ease;
+}
+
+.candidate-row:not(:disabled):hover .ballot-box {
+  border-color: var(--brass);
+}
+
+.candidate-row.skeleton {
+  cursor: default;
+  border-bottom: none;
+  padding: 8px 0;
+}
+
+.skeleton-bar {
+  display: block;
+  height: 14px;
+  width: 60%;
+  background: var(--paper-line);
+  border-radius: 2px;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+.ballot-footer {
+  padding: 20px 44px 32px;
+  border-top: 1px dashed var(--paper-line);
+  margin-top: 8px;
+}
+
+.ballot-footer p {
+  margin: 0;
+  font-size: 13px;
+  color: #6b6656;
+}
+
+.contract-line {
+  margin-top: 8px !important;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.contract-line code {
+  color: #4a4636;
+  word-break: break-all;
+}
+
+.toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(120%);
+  background: var(--ink-panel);
+  color: var(--text-on-ink);
+  padding: 14px 22px;
+  border-radius: 3px;
+  font-size: 14px;
+  font-family: var(--sans);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+  border-left: 3px solid var(--brass);
+  transition: transform 0.25s ease;
+  max-width: 90vw;
+  z-index: 10;
+}
+
+.toast.error {
+  border-left-color: var(--stamp-red);
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (max-width: 560px) {
+  body {
+    padding: 32px 12px;
+  }
+  .ballot-header, .voter-strip, .ballot-body, .ballot-footer {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+  .ballot-header h1 {
+    font-size: 32px;
+  }
+  .candidate-name {
+    font-size: 17px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.candidate-row:focus-visible,
+.connect-btn:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 2px;
+}

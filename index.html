@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>On-Chain Ballot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="ballot-sheet">
+
+    <header class="ballot-header">
+      <p class="precinct-line">Precinct: Local Testnet · Ledger: Ethereum Sepolia</p>
+      <h1>On-Chain Ballot</h1>
+      <p class="ballot-sub">One vote per wallet. Every vote is a transaction, permanently recorded on the blockchain.</p>
+    </header>
+
+    <section class="voter-strip" id="voterStrip">
+      <div class="voter-status">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="voterStatusText">Wallet not connected</span>
+      </div>
+      <button id="connectBtn" class="connect-btn">Connect MetaMask</button>
+    </section>
+
+    <section class="ballot-body">
+      <div class="ballot-rule">
+        <span>Candidates</span>
+        <span>Votes</span>
+      </div>
+
+      <ul class="candidate-list" id="candidateList">
+        <!-- candidate rows injected by script.js -->
+        <li class="candidate-row skeleton">
+          <span class="skeleton-bar"></span>
+        </li>
+      </ul>
+    </section>
+
+    <footer class="ballot-footer">
+      <p id="footerMessage">Connect your wallet to view the ballot and cast a vote.</p>
+      <p class="contract-line">Contract: <code id="contractAddressDisplay">not deployed yet</code></p>
+    </footer>
+
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
